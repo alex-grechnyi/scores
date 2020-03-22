@@ -17,7 +17,7 @@ router.get('/', async (req,res) => {
 
 
 //Create a new game
-router.post('/', (req, res) => {
+/*router.post('/', (req, res) => {
     const {team1, team2, score1, score2, date} = req.body;
     Games.create({
         team1, team2, score1, score2, date,
@@ -25,12 +25,14 @@ router.post('/', (req, res) => {
     })
         .then(game => res.send(game))
         .catch(err => console.log(err))
-});
+});*/
 
-//Approve game results
-router.put('/', (req, res) => {
+// Approve game results
+/*router.put('/', (req, res) => {
     const{id} = req.body;
-    Games.findOne({ where: {id}})
+    Games.update({
+        approved: true
+    },{ where: {id}})
         .then(game => {
             game.update({
                 approved: true
@@ -38,14 +40,14 @@ router.put('/', (req, res) => {
             res.send('Game confirmed');
         })
         .catch(err => console.log(err))
-});
+});*/
 
 //Decline and delete game result
-router.delete('/', (req, res) => {
+/*router.delete('/', (req, res) => {
     const{id} = req.query;
     Games.destroy({ where: {id}})
         .then(() => res.send('Score deleted'))
         .catch(err => console.log(err))
-});
+});*/
 
 module.exports = router;
