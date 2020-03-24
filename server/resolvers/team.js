@@ -10,7 +10,7 @@ export default {
   },
 
   Mutation: {
-    confirm: combineResolvers(
+    confirmTeam: combineResolvers(
       isAuthenticated,
       async (parent, { team }, { models, me }) =>
         await models.Team.update(
@@ -23,7 +23,7 @@ export default {
           }
         )
     ),
-    create: combineResolvers(
+    createTeam: combineResolvers(
       isAuthenticated,
       async (parent, { teamName, id, image }, { models, me }) => {
         const team = await models.Team.findOne({ where: { teamName } });
@@ -42,7 +42,7 @@ export default {
         });
       }
     ),
-    join: combineResolvers(
+    joinTeam: combineResolvers(
       isAuthenticated,
       async (parent, { player, teamName }, { models, me }) => {
         const user = await models.User.update(
@@ -60,7 +60,7 @@ export default {
         );
       }
     ),
-    delete: combineResolvers(
+    deleteTeam: combineResolvers(
       isAuthenticated,
       async (parent, { teamName }, { models, me }) => {
         const team = await models.User.findOne({ where: { teamName } });
@@ -79,7 +79,7 @@ export default {
         return "success";
       }
     ),
-    leave: combineResolvers(
+    leaveTeam: combineResolvers(
       isAuthenticated,
       async (parent, { teamName, login }, { models, me }) => {
         const team = await models.Team.update(
@@ -99,7 +99,7 @@ export default {
         return team;
       }
     ),
-    accept: combineResolvers(
+    acceptTeam: combineResolvers(
       isAuthenticated,
       async (parent, { player, teamName }, { models, me }) => {
         const team = await models.Team.update(

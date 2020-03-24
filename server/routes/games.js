@@ -2,19 +2,19 @@ const router = require('express').Router();
 const {Games} = require ('../models/index');
 
 //Get all games
-router.get('/', async (req,res) => {
+/*router.get('/', async (req,res) => {
     if (Object.keys(req.query).length) {
         await Games.findAll({ where: {team2: req.query.team, approved: false}})
-            .then(games => res.send(games)
+            .then(/games => res.send(games)
             )
             .catch(err => console.log(err))
     } /*else {
         await Games.findAll()
             .then(games => res.send(games))
             .catch(err => console.log(err));
-    }*/
+    }
 });
-
+*/
 
 //Create a new game
 /*router.post('/', (req, res) => {

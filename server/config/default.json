@@ -1,6 +1,6 @@
 {
   "db": {
-    "url": "postgresql://postgres:arancia@localhost:5432/scores"
+    "url": "postgres://postgres:arancia@localhost:5432/scores"
   },
   "server": {
     "port": 5000
