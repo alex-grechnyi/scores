@@ -3,13 +3,14 @@ import { ApolloConsumer } from 'react-apollo';
 
 import history from '../../constants/history';
 import {ROUTES} from "../../constants/routes.const";
+import styles from "../../newComponents/LoginPage/styleVer2.module.css";
+import {SignOutIcon} from "../../icons";
 
 const SignOutButton = () => (
     <ApolloConsumer>
         {client => (
-            <button type="btn btn-outline-secondary block logout" onClick={() => signOut(client)}>
-                Sign Out
-            </button>
+            <button className={styles.btnLogout} onClick={() => signOut(client)}><SignOutIcon
+            className={styles.btnLogoutIcon}/></button>
         )}
     </ApolloConsumer>
 );

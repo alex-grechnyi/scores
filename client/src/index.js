@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 
 import { ApolloProvider } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';
@@ -11,6 +10,8 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 
 import { App } from './components';
 import { signOut } from './components/sign-out-btn/sign-out-btn';
+
+import './index.css';
 
 const httpLink = new HttpLink({
   uri: 'http://localhost:5000/graphql',

@@ -129,27 +129,27 @@ const Header = (props) => {
     if (props.state) {
         loggedIn = props.state.loggedIn;
     }
-    if (!loggedIn) {
-        return (
-            <div className={styles.header}>
-                <Container>
-                    <Row>
-                        <NavLink className={styles.labelLink} to='/'><Col className={styles.godel}>Godel<span
-                            className={styles.football}>Football</span></Col></NavLink>
-                        <Col className={styles.navButtons}>
-                            <NavLink to='/register'>
-                                <button type="button" className={styles.navBarRegister}>Register</button>
-                            </NavLink>
-                            <NavLink to='/login'>
-                                <button type="button" className={styles.navBarLogin}>Login</button>
-                            </NavLink>
-                        </Col>
-                    </Row>
-
-                </Container>
-            </div>
-        )
-    }
+    // if (!loggedIn) {
+    //     return (
+    //         <div className={styles.header}>
+    //             <Container>
+    //                 <Row>
+    //                     <NavLink className={styles.labelLink} to='/'><Col className={styles.godel}>Godel<span
+    //                         className={styles.football}>Football</span></Col></NavLink>
+    //                     <Col className={styles.navButtons}>
+    //                         <NavLink to='/register'>
+    //                             <button type="button" className={styles.navBarRegister}>Register</button>
+    //                         </NavLink>
+    //                         <NavLink to='/login'>
+    //                             <button type="button" className={styles.navBarLogin}>Login</button>
+    //                         </NavLink>
+    //                     </Col>
+    //                 </Row>
+    //
+    //             </Container>
+    //         </div>
+    //     )
+    // }
     if (props.state.data.isCaptain) {
         return (
             <div className={styles.header}>
