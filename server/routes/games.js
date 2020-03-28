@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const {Games} = require ('../models/index');
 
 //Get all games
 /*router.get('/', async (req,res) => {

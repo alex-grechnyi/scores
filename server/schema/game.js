@@ -18,11 +18,11 @@ export default gql`
   scalar Date
 
   type Game {
-    team1: String,
-    team2: String,
-    score1: String,
-    score2: String,
-    approved: Boolean,
+    team1: String
+    team2: String
+    score1: String
+    score2: String
+    approved: Boolean
     date: Date
   }
 `;

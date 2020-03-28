@@ -6,13 +6,13 @@ import { isAuthenticated } from "./authorization";
 
 export default {
   Query: {
-    teams: async (user, args, { models }) => await models.Team.findAll()
+    teams: async (user, args, { models }) => await models.Team.findAll({plain: true})
   },
 
   Mutation: {
     confirmTeam: combineResolvers(
       isAuthenticated,
-      async (parent, { team }, { models, me }) =>
+      async (parent, { team }, { models, me }) => {
         await models.Team.update(
           {
             captainApproved: true,
@@ -21,7 +21,8 @@ export default {
           {
             where: { teamName: team }
           }
-        )
+        );
+          return "success"}
     ),
     createTeam: combineResolvers(
       isAuthenticated,

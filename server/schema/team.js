@@ -6,22 +6,22 @@ export default gql`
   }
 
   extend type Mutation {
-    confirmTeam(team: String!): Team
+    confirmTeam(team: String!): String
 
     createTeam(teamName: String!, id: Int, image: String): Team
 
     joinTeam(player: String, teamName: String): Team
-    
+
     deleteTeam(teamName: String!): String
-    
+
     leaveTeam(teamName: String, login: String): Team
-    
+
     acceptTeam(player: String, teamName: String): Team
   }
 
   type Team {
     captainId: Int
-    teamName: String!
+    teamName: String
     playerId: Int
     captainApproved: Boolean
     playerApproved: Boolean

@@ -12,14 +12,14 @@ const createToken = async ({ login }, secret, expiresIn) =>
 export default {
   Query: {
     user: async (parent, { login, teamName, isCaptain = false }, { models }) =>
-      await models.User.findOne({ where: { login, teamName, isCaptain } }),
+      await models.User.findOne({ where: { login, teamName, isCaptain }, plain: true }),
     me: async (parent, args, { models, me }) => {
       if (!me) {
         return null;
       }
       const { login } = me;
 
-      return await models.User.findOne({ where: { login } });
+      return await models.User.findOne({ where: { login }, plain: true });
     }
   },
 

@@ -4,10 +4,11 @@ import { isAuthenticated } from "./authorization";
 
 export default {
   Query: {
-    games: async (parent, args, { models }) => await models.Games.findAll(),
+    games: async (parent, args, { models }) => await models.Game.findAll({ plain: true }),
     teamGames: async (parent, { team }, { models }) =>
-      await models.Games.findAll({
-        where: { team2: team, approved: false }
+      await models.Game.findAll({
+        where: { team2: team, approved: false },
+        plain: true
       })
   },
 
@@ -15,7 +16,7 @@ export default {
     createGame: combineResolvers(
       isAuthenticated,
       async (parent, { team1, team2, score1, score2, date }, { models, me }) =>
-        await models.Games.create({
+        await models.Game.create({
           team1,
           team2,
           score1,
@@ -27,7 +28,7 @@ export default {
     approveGame: combineResolvers(
       isAuthenticated,
       async (parent, { id }, { models, me }) =>
-        await models.Games.update(
+        await models.Game.update(
           {
             approved: true
           },
@@ -37,7 +38,7 @@ export default {
     deleteGame: combineResolvers(
       isAuthenticated,
       async (parent, { id }, { models, me }) => {
-        await models.Games.destroy({ where: { id } });
+        await models.Game.destroy({ where: { id } });
         return "success";
       }
     )
