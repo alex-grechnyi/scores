@@ -1,15 +1,15 @@
-import Header from "./components/header/Header";
+import Header from "../header/Header";
 import {Route, Router, Switch} from "react-router";
-import history from "./history";
-import ApproveGames from "./components/modal/ApproveGames/ApproveGames";
-import GameCreate from "./components/modal/GameCreate/GameCreate";
-import Notification from "./components/notification/Notification";
-import Login from "./components/loginPage";
-import Register from "./components/registerPage";
-import CreateTeam from "./components/modal/CreateTeam/createTeam";
-import ViewTeam from "./components/modal/ViewTeam/viewTeam";
+import history from "../../history";
+import ApproveGames from "../modal/ApproveGames/ApproveGames";
+import GameCreate from "../modal/GameCreate/GameCreate";
+import Notification from "../notification/Notification";
+import Login from "../loginPage";
+import Register from "../registerPage";
+import CreateTeam from "../modal/CreateTeam/createTeam";
+import ViewTeam from "../modal/ViewTeam/ViewTeam";
 import InvitePlayer from "./components/modal/InvitePlayer/ChoosePlayer";
-import Home from "./components/homePage";
+import Home from "../homePage";
 import React from "react";
 
 

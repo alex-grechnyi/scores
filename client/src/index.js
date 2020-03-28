@@ -1,52 +1,67 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import setToken from './setToken';
-import Login from './components/loginPage';
-import Register from './components/registerPage';
-import Home from './components/homePage';
-import history from './history'
-import {
-    Router,
-    Switch,
-    Route
-} from "react-router-dom";
-import ApproveGames from "./components/modal/ApproveGames/ApproveGames";
 import './index.css';
-import GameCreate from "./components/modal/GameCreate/GameCreate";
-import CreateTeam from "./components/modal/CreateTeam/createTeam";
-import ViewTeam from "./components/modal/ViewTeam/ViewTeam";
-import InvitePlayer from "./components/modal/InvitePlayer/InvitePlayer";
 
+import { ApolloProvider } from 'react-apollo';
+import { ApolloClient } from 'apollo-client';
+import { ApolloLink } from 'apollo-link';
+import { HttpLink } from 'apollo-link-http';
+import { onError } from 'apollo-link-error';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 
-//Add token to every request header
-setToken(localStorage.jwt);
+import { App } from './components';
+import { signOut } from './components/sign-out-btn/sign-out-btn';
+
+const httpLink = new HttpLink({
+  uri: 'http://localhost:5000/graphql',
+});
+
+const authLink = new ApolloLink((operation, forward) => {
+  operation.setContext(({ headers = {} }) => {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      headers = { ...headers, 'x-token': token };
+    }
+
+    return { headers };
+  });
+
+  return forward(operation);
+});
+
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    graphQLErrors.forEach(({ message, locations, path }) => {
+      console.log('GraphQL error', message);
+
+      if (message === 'UNAUTHENTICATED') {
+        signOut(client);
+      }
+    });
+  }
+
+  if (networkError) {
+    console.log('Network error', networkError);
+
+    if (networkError.statusCode === 401) {
+      signOut(client);
+    }
+  }
+});
+
+const link = ApolloLink.from([authLink, errorLink, httpLink]);
+
+const cache = new InMemoryCache();
+
+const client = new ApolloClient({
+  link,
+  cache,
+});
 
 ReactDOM.render(
-    <>
-        <Router history={history}>
-            <Switch>
-                <Route path="/modal">
-                    <div>
-                        <ApproveGames />
-                        <GameCreate />
-                    </div>
-
-                </Route>
-                <Route path="/login">
-                    <Login />
-                </Route>
-                <Route path="/register">
-                    <Register />
-                </Route>
-                <Route path="/test1">
-                    <CreateTeam/>
-                    <ViewTeam/>
-                    <InvitePlayer/>
-                </Route>
-                <Route path="/">
-                    <Home />
-                </Route>
-            </Switch>
-        </Router></>
-    , document.getElementById('root'));
-
+  <ApolloProvider client={client}>
+    <App />
+  </ApolloProvider>,
+  document.getElementById('root'),
+);
