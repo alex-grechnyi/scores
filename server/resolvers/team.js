@@ -6,7 +6,7 @@ import { isAuthenticated } from "./authorization";
 
 export default {
   Query: {
-    teams: async (user, args, { models }) => await models.Team.findAll({plain: true})
+    teams: async (user, args, { models }) => await models.Team.findAll()
   },
 
   Mutation: {

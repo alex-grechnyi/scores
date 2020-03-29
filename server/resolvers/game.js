@@ -4,11 +4,10 @@ import { isAuthenticated } from "./authorization";
 
 export default {
   Query: {
-    games: async (parent, args, { models }) => await models.Game.findAll({ plain: true }),
+    games: async (parent, args, { models }) => await models.Game.findAll(),
     teamGames: async (parent, { team }, { models }) =>
       await models.Game.findAll({
-        where: { team2: team, approved: false },
-        plain: true
+        where: { team2: team, approved: false }
       })
   },
 

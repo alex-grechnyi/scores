@@ -12,25 +12,25 @@ const createToken = async ({ login }, secret, expiresIn) =>
 export default {
   Query: {
     user: async (parent, { login, teamName, isCaptain = false }, { models }) =>
-      await models.User.findOne({ where: { login, teamName, isCaptain }, plain: true }),
+      await models.User.findOne({ where: { login, teamName, isCaptain }}),
     me: async (parent, args, { models, me }) => {
       if (!me) {
         return null;
       }
       const { login } = me;
 
-      return await models.User.findOne({ where: { login }, plain: true });
+      return await models.User.findOne({ where: { login }});
     }
   },
 
   Mutation: {
     signUp: async (
       parent,
-      { username, login, password },
+      { userName, login, password },
       { models, secret }
     ) => {
       const user = await models.User.create({
-        username,
+        userName,
         login,
         password
       });

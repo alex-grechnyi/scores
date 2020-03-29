@@ -12,6 +12,7 @@ import { App } from './components';
 import { signOut } from './components/sign-out-btn/sign-out-btn';
 
 import './index.css';
+import ModalProvider from './helpers/modal-provider';
 
 const httpLink = new HttpLink({
   uri: 'http://localhost:5000/graphql',
@@ -62,7 +63,7 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <App />
+      <App />
   </ApolloProvider>,
   document.getElementById('root'),
 );

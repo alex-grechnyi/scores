@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-import SignOutButton from "./";
+import {SignOutBtn} from "../index";
 import NavigationNonAuth from "./navigation-not-auth/navigation-not-auth";
 
 import {ROUTES} from "../../constants/routes.const";
@@ -33,17 +33,17 @@ const NavigationAuth = ({ session }) => (
             <NavLink to={ROUTES.LANDING}>Landing</NavLink>
         </li>
         <li>
-            <Link to={routes.ACCOUNT}>Account ({session.me.username})</Link>
+            <NavLink to={routes.ACCOUNT}>Account ({session.me.username})</NavLink>
         </li>
         {session &&
         session.me &&
-        session.me.role === 'ADMIN' && (
+        session.me.isCaptain && (
             <li>
-                <Link to={routes.ADMIN}>Admin</Link>
+                captain page
             </li>
         )}
         <li>
-            <SignOutButton />
+            <SignOutBtn />
         </li>
     </ul>
 );
