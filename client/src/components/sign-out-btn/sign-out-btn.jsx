@@ -3,7 +3,7 @@ import { ApolloConsumer } from 'react-apollo';
 
 import history from '../../constants/history';
 import {ROUTES} from "../../constants/routes.const";
-import styles from "../../newComponents/LoginPage/styleVer2.module.css";
+import styles from "../../styleVer2.module.css";
 import {SignOutIcon} from "../../icons";
 
 const SignOutButton = () => (

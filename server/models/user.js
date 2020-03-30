@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   User.findByLogin = async login => await User.findOne({
-      where: { username: login },
+      where: { userName: login },
     });
 
   User.beforeCreate(async user => {

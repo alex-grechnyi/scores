@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import RegisterPageVer2 from '../newComponents/RegisterPage/RegisterPageVer2';
-import { Redirect } from 'react-router';
-import Header from './header/Header';
+import AuthForm from '../components/auth-form/auth-form';
 import { useMutation } from '@apollo/react-hooks';
 import { USER } from '../queries/queries';
 import { ROUTES } from '../constants/routes.const';
@@ -24,32 +22,47 @@ const SignUpPage = ({ history, refetch }) => {
     variables: { userName, login, password },
   });
 
-  const onChange = e => {
-    const { name, value } = e.target;
-    setState({ ...state, [name]: value });
-  };
-
-  const onSubmit = e => {
-    e.preventDefault();
-
-    signUp();
-  };
-
   const isInvalid =
     password !== passwordConfirmation ||
     password === '' ||
     login === '' ||
     userName === '';
 
+  const fieldsMap = [
+    {
+      title: 'Login',
+      name: 'login',
+      value: login,
+      type: 'text',
+    },
+    {
+      title: 'Full Name',
+      name: 'userName',
+      value: userName,
+      type: 'text',
+    },
+    {
+      title: 'Password',
+      name: 'password',
+      value: password,
+      type: 'password',
+    },
+    {
+      title: 'Confirm password',
+      name: 'passwordConfirmation',
+      value: passwordConfirmation,
+      type: 'password',
+    },
+  ];
+
   return (
     <>
-      <RegisterPageVer2
-        login={login}
-        password={password}
-        userName={userName}
-        confirmPassword={passwordConfirmation}
-        onChange={onChange}
-        onSubmit={onSubmit}
+      <AuthForm
+        fieldsMap={fieldsMap}
+        type={'Sign Up'}
+        state={state}
+        setState={setState}
+        submit={signUp}
         error={error}
         isInvalid={isInvalid}
       />

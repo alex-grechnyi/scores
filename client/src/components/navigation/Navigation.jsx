@@ -5,7 +5,7 @@ import {SignOutBtn} from "../index";
 import NavigationNonAuth from "./navigation-not-auth/navigation-not-auth";
 
 import {ROUTES} from "../../constants/routes.const";
-import styles from "../../newComponents/LoginPage/styleVer2.module.css";
+import styles from "../../styleVer2.module.css";
 import {Col, Container, Row} from "react-bootstrap";
 
 

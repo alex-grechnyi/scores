@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../../newComponents/LoginPage/styleVer2.module.css';
+import styles from '../../../styleVer2.module.css';
 import Notification from "../../notification/Notification";
 import {ReactComponent as Plus} from "../../img/svg/plus-box.svg";
 import {SignOutBtn} from "../../index";

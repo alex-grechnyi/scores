@@ -1,6 +1,6 @@
 import React from 'react';
 import { ROUTES } from '../../../constants/routes.const';
-import styles from '../../../newComponents/LoginPage/styleVer2.module.css';
+import styles from '../../../styleVer2.module.css';
 import { Col } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 

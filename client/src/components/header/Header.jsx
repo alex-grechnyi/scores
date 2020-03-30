@@ -1,4 +1,4 @@
-import styles from "../../newComponents/LoginPage/styleVer2.module.css";
+import styles from "../../styleVer2.module.css";
 import {Col, Container, Row} from "react-bootstrap";
 import React, {useState} from "react";
 import {NavLink} from "react-router-dom";
