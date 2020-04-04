@@ -3,10 +3,12 @@ import ReactDOM from 'react-dom';
 
 import { ApolloProvider } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';
-import { ApolloLink } from 'apollo-link';
+import { getMainDefinition } from 'apollo-utilities';
+import { ApolloLink, split } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import { WebSocketLink } from 'apollo-link-ws';
 
 import { App } from './components';
 import { signOut } from './components/sign-out-btn/sign-out-btn';
@@ -17,6 +19,24 @@ import ModalProvider from './helpers/modal-provider';
 const httpLink = new HttpLink({
   uri: 'http://localhost:5000/graphql',
 });
+
+const wsLink = new WebSocketLink({
+  uri: `ws://localhost:5000/graphql`,
+  options: {
+    reconnect: true,
+  },
+});
+
+const terminatingLink = split(
+    ({ query }) => {
+      const { kind, operation } = getMainDefinition(query);
+      return (
+          kind === 'OperationDefinition' && operation === 'subscription'
+      );
+    },
+    wsLink,
+    httpLink,
+);
 
 const authLink = new ApolloLink((operation, forward) => {
   operation.setContext(({ headers = {} }) => {
@@ -52,7 +72,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   }
 });
 
-const link = ApolloLink.from([authLink, errorLink, httpLink]);
+const link = ApolloLink.from([authLink, errorLink, terminatingLink]);
 
 const cache = new InMemoryCache();
 

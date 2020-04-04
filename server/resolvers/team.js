@@ -1,12 +1,14 @@
-import { Op } from "sequelize";
-import { combineResolvers } from "graphql-resolvers";
-import { ValidationError } from "apollo-server";
+import { Op } from 'sequelize';
+import { combineResolvers } from 'graphql-resolvers';
+import { ValidationError } from 'apollo-server';
 
-import { isAuthenticated } from "./authorization";
+import pubSub, { EVENTS } from '../subscription';
+import { isAuthenticated } from './authorization';
 
 export default {
   Query: {
-    teams: async (user, args, { models }) => await models.Team.findAll()
+    teams: async (user, args, { models }) =>
+      await models.Team.findAll(),
   },
 
   Mutation: {
@@ -16,69 +18,77 @@ export default {
         await models.Team.update(
           {
             captainApproved: true,
-            playerApproved: true
+            playerApproved: true,
           },
           {
-            where: { teamName: team }
-          }
+            where: { teamName: team },
+          },
         );
-          return "success"}
+        return 'success';
+      },
     ),
     createTeam: combineResolvers(
       isAuthenticated,
       async (parent, { teamName, id, image }, { models, me }) => {
-        const team = await models.Team.findOne({ where: { teamName } });
-        if (team) throw new ValidationError("Team already exists");
+        const team = await models.Team.findOne({
+          where: { teamName },
+        });
+        if (team) throw new ValidationError('Team already exists');
         await models.User.update(
           {
             isCaptain: true,
-            teamName
+            teamName,
           },
-          { where: { id } }
+          { where: { id } },
         );
         return await models.Team.create({
           teamName,
           captainId: id,
-          image
+          image,
         });
-      }
+      },
     ),
     joinTeam: combineResolvers(
       isAuthenticated,
       async (parent, { player, teamName }, { models, me }) => {
         const user = await models.User.update(
           {
-            teamName
+            teamName,
           },
-          { where: { login: player } }
+          { where: { login: player } },
         );
+        await pubSub.publish(EVENTS.TEAM.JOINED, {
+          teamJoined: { teamName },
+        });
         return await models.Team.update(
           {
             playerId: user.id,
-            playerApproved: true
+            playerApproved: false,
           },
-          { where: { teamName } }
+          { where: { teamName } },
         );
-      }
+      },
     ),
     deleteTeam: combineResolvers(
       isAuthenticated,
       async (parent, { teamName }, { models, me }) => {
-        const team = await models.User.findOne({ where: { teamName } });
+        const team = await models.User.findOne({
+          where: { teamName },
+        });
         const users = [];
         users.push(team.captainId, team.playerId);
         for await (const userId of users) {
           await models.User.update(
             {
               isCaptain: false,
-              teamName: null
+              teamName: null,
             },
-            { where: { id: userId } }
+            { where: { id: userId } },
           );
         }
         await models.Team.destroy({ where: { teamName } });
-        return "success";
-      }
+        return 'success';
+      },
     ),
     leaveTeam: combineResolvers(
       isAuthenticated,
@@ -87,49 +97,54 @@ export default {
           {
             playerId: null,
             captainApproved: false,
-            playerApproved: false
+            playerApproved: false,
           },
-          { where: { teamName } }
+          { where: { teamName } },
         );
         await models.User.update(
           {
-            teamName: null
+            teamName: null,
           },
-          { where: { login } }
+          { where: { login } },
         );
         return team;
-      }
+      },
     ),
     acceptTeam: combineResolvers(
       isAuthenticated,
       async (parent, { player, teamName }, { models, me }) => {
         const team = await models.Team.update(
           {
-            playerApproved: true
+            playerApproved: true,
           },
-          { where: { teamName } }
+          { where: { teamName } },
         );
         const otherTeams = await models.Team.findAll({
-          where: { teamName: { [Op.not]: teamName } }
+          where: { teamName: { [Op.not]: teamName } },
         });
         for await (const team of otherTeams) {
           team.update({
             playerId: null,
-            captainApproved: false
+            captainApproved: false,
           });
         }
         await models.User.update(
           {
-            teamName
+            teamName,
           },
-          { where: { login: player } }
+          { where: { login: player } },
         );
         return team;
-      }
+      },
     ),
     /*decline: combineResolvers(
       isAuthenticated,
       async (parent, { teamName, login }, { models, me }) => {}
     )*/
-  }
+  },
+  Subscription: {
+    playerJoined: {
+      subscribe: () => pubSub.asyncIterator(EVENTS.TEAM.JOINED),
+    },
+  },
 };
