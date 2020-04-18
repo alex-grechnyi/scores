@@ -3,40 +3,24 @@ import ReactDOM from 'react-dom';
 
 import { ApolloProvider } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';
-import { getMainDefinition } from 'apollo-utilities';
-import { ApolloLink, split } from 'apollo-link';
+import { ApolloLink } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { WebSocketLink } from 'apollo-link-ws';
 
 import { App } from './components';
 import { signOut } from './components/sign-out-btn/sign-out-btn';
 
 import './index.css';
 import ModalProvider from './helpers/modal-provider';
+import {CLIENT} from "./queries/queries";
+import SignInPage from "./pages/sign-in";
+import {useQuery} from "@apollo/react-hooks";
+import {typeDefs} from "./resolvers/typeDefs";
 
 const httpLink = new HttpLink({
   uri: 'http://localhost:5000/graphql',
 });
-
-const wsLink = new WebSocketLink({
-  uri: `ws://localhost:5000/graphql`,
-  options: {
-    reconnect: true,
-  },
-});
-
-const terminatingLink = split(
-    ({ query }) => {
-      const { kind, operation } = getMainDefinition(query);
-      return (
-          kind === 'OperationDefinition' && operation === 'subscription'
-      );
-    },
-    wsLink,
-    httpLink,
-);
 
 const authLink = new ApolloLink((operation, forward) => {
   operation.setContext(({ headers = {} }) => {
@@ -72,18 +56,30 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   }
 });
 
-const link = ApolloLink.from([authLink, errorLink, terminatingLink]);
+const link = ApolloLink.from([authLink, errorLink, httpLink]);
 
 const cache = new InMemoryCache();
+
+cache.writeData({
+  data: {
+    isLoggedIn: !!localStorage.getItem('token')
+  },
+});
 
 const client = new ApolloClient({
   link,
   cache,
+  typeDefs
 });
+
+const IsLoggedIn = () => {
+  const { data } = useQuery(CLIENT.IS_LOGGED_IN);
+  return data.isLoggedIn ? <App /> : <SignInPage />;
+};
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-      <App />
+    <IsLoggedIn/>
   </ApolloProvider>,
   document.getElementById('root'),
 );

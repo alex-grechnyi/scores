@@ -27,4 +27,11 @@ export default gql`
     playerApproved: Boolean
     image: String
   }
+
+  type Subscription {
+    playerJoined: PlayerJoined
+  }
+  type PlayerJoined {
+    teamName: String
+  }
 `;

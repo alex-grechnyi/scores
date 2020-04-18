@@ -14,7 +14,7 @@ const SignInPage = ({ history, refetch }) => {
   const [signIn, { error }] = useMutation(USER.SIGN_IN, {
     onCompleted({ signIn }) {
       localStorage.setItem('token', signIn.token);
-      history.push(ROUTES.SIGN_UP);
+      history.push(ROUTES.LANDING);
     },
     variables: { login, password },
   });

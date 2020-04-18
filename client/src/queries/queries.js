@@ -12,19 +12,27 @@ export const USER = {
     }
   `,
   SIGN_UP: gql`
-  mutation($userName: String!, $login: String!, $password: String!) {
-    signUp(userName: $userName, login: $login, password: $password) {
-      token
+    mutation(
+      $userName: String!
+      $login: String!
+      $password: String!
+    ) {
+      signUp(
+        userName: $userName
+        login: $login
+        password: $password
+      ) {
+        token
+      }
     }
-  }
-`,
+  `,
   SIGN_IN: gql`
     mutation($login: String!, $password: String!) {
       signIn(login: $login, password: $password) {
         token
       }
     }
-  `
+  `,
 };
 
 export const TEAM = {
@@ -65,6 +73,14 @@ export const GAME = {
         approved
         date
       }
+    }
+  `,
+};
+
+export const CLIENT = {
+  IS_LOGGED_IN: gql`
+    query IsUserLoggedIn {
+      isLoggedIn @client
     }
   `,
 };
